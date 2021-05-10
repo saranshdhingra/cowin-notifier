@@ -1,7 +1,10 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const {db} = require('./db');
+const {mailer} = require('./mail');
+
+moment.tz.setDefault('UTC');
 
 const pollTimeout = 20; // repeat the process every X seconds
 
@@ -39,7 +42,7 @@ async function checkForUsers(users){
         let promises=[];
         users.forEach((user)=>{
             promises.push(checkForDate(user,today));
-            promises.push(checkForDate(user,tomorrow));
+            // promises.push(checkForDate(user,tomorrow));
         });
     
         Promise.all(promises).then(resolve);
@@ -56,17 +59,17 @@ async function checkForDate(user,date){
     let districtId = user.district_id, minAge=user.min_age, vaccine=user.vaccine_pref;
 
     return new Promise(async (resolve)=>{
-        console.log(`Checking for ${vaccine} in age limit: ${minAge} for date:${date} and district id:${districtId}`);
+        console.log(`Checking for ${vaccine}(user:${user.id}) in age limit: ${minAge} for date:${date} and district id:${districtId}`);
 
-        let data = await getData(districtId,date);
-        centers = data.centers;
+        let data = await getData(districtId,date),
+            centers = data.centers;
 
         centers.forEach((center)=>{
             center.sessions.forEach((session)=>{
-                if(session.vaccine.toLowerCase() === vaccine && session.min_age_limit <= minAge && session.available_capacity > 0){
+                if(shouldNotify(session,user)){
                     let displayStr=`Found!!!\n|--Center: ${center.name}\n|--Address: ${center.address}\n|--Available:${session.available_capacity}\n|--ID:${session.session_id}\n|--PIN:${center.pincode}\n|--Date: ${session.date}`;
                     console.log(displayStr);
-                    // console.log(center);
+                    // mailer.sendMail(user.email,displayStr);
                 }
             });
         });
@@ -89,13 +92,23 @@ function getData(districtId,date){
         'user-agent':'Mozilla/5.0 (X11; CrOS x86_64 13729.84.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.130 Safari/537.36'
     };
     return new Promise((resolve,reject)=>{
-        // resolve(getStaticData());
-        // return;
+        resolve(getStaticData());
+        return;
         let url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`;
         fetch(url,{headers})
         .then(response => response.json())
         .then(data => resolve(data));
     });
+}
+
+function shouldNotify(session,user){
+    const diffIsgreater = user.last_notified===null || moment().diff(moment().utc(user.last_notified),'seconds') > process.env.MIN_NOTIFY_DELAY_SECS;
+    return (
+        session.vaccine.toLowerCase() === user.vaccine_pref && 
+        session.min_age_limit <= user.min_age && 
+        session.available_capacity > 0 && 
+        diffIsgreater
+    );
 }
 
 /**

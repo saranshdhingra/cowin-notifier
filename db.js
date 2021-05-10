@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
 async function getUsers() {
     return new Promise((resolve) => {
 
-        connection.query('SELECT * FROM users', function (error, results, fields) {
+        connection.query("SELECT * FROM users where (last_notified is null or last_notified < DATE_SUB(NOW(), INTERVAL '1' HOUR))", function (error, results, fields) {
             if (error) throw error;
             resolve(results);
         });

@@ -62,17 +62,23 @@ async function checkForDate(user,date){
         console.log(`Checking for ${vaccine}(user:${user.id}) in age limit: ${minAge} for date:${date} and district id:${districtId}`);
 
         let data = await getData(districtId,date),
-            centers = data.centers;
+            centers = data.centers,
+            foundSessions = [];
 
         centers.forEach((center)=>{
             center.sessions.forEach((session)=>{
-                if(shouldNotify(session,user)){
-                    let displayStr=`Found!!!\n|--Center: ${center.name}\n|--Address: ${center.address}\n|--Available:${session.available_capacity}\n|--ID:${session.session_id}\n|--PIN:${center.pincode}\n|--Date: ${session.date}`;
-                    console.log(displayStr);
-                    // mailer.sendMail(user.email,displayStr);
+                if(isSessionValid(session,user)){
+                    let displayStr=`|--Center: ${center.name}\n|--Address: ${center.address}\n|--Available:${session.available_capacity}\n|--ID:${session.session_id}\n|--PIN:${center.pincode}\n|--Date: ${session.date}`;
+                    foundSessions.push(displayStr);
                 }
             });
         });
+
+        if(foundSessions.length && shouldNotify(user)){
+            console.log(foundSessions.join('\n'));
+            await mailer.sendMail(user.email,foundSessions);
+            await db.updateUserNotified(user);
+        }
 
         resolve();
     });
@@ -101,13 +107,18 @@ function getData(districtId,date){
     });
 }
 
-function shouldNotify(session,user){
-    const diffIsgreater = user.last_notified===null || moment().diff(moment().utc(user.last_notified),'seconds') > process.env.MIN_NOTIFY_DELAY_SECS;
+function isSessionValid(session,user){
     return (
         session.vaccine.toLowerCase() === user.vaccine_pref && 
         session.min_age_limit <= user.min_age && 
-        session.available_capacity > 0 && 
-        diffIsgreater
+        session.available_capacity > 0
+    );
+}
+
+function shouldNotify(user){
+    return (
+        user.last_notified===null || 
+        moment().diff(moment(user.last_notified),'seconds') > process.env.MIN_NOTIFY_DELAY_SECS
     );
 }
 

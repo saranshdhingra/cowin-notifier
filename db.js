@@ -1,5 +1,8 @@
 const mysql = require('mysql');
+const moment = require('moment-timezone');
 require('dotenv').config();
+
+moment.tz.setDefault('UTC');
 
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -20,6 +23,19 @@ async function getUsers() {
     });
 }
 
+async function updateUserNotified(user){
+    return new Promise((resolve)=>{
+        const time=moment().format('YYYY-MM-DD hh:mm:ss');
+        console.log('updating last notified for user'+user.id+" to"+time);
+        connection.query("UPDATE users SET last_notified=? WHERE users.id=?",[time,user.id],function(error,results,fields){
+            if(error){
+                throw error;
+            }
+            resolve();
+        });
+    });
+}
+
 function connect(){
     connection.connect();
 }
@@ -30,6 +46,7 @@ function disconnect(){
 
 exports.db={
     getUsers,
+    updateUserNotified,
     connect,
     disconnect
 };

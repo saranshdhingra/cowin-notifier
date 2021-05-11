@@ -36,6 +36,29 @@ async function updateUserNotified(user){
     });
 }
 
+function insertDistrict(row){
+    return new Promise((resolve)=>{
+        const time=moment().format('YYYY-MM-DD hh:mm:ss');
+        connection.query("INSERT INTO districts VALUES(?,?,?,?,?)",[row.id,row.state,row.district,time,time],function(error,results,fields){
+            if(error){
+                throw error;
+            }
+            resolve();
+        });
+    });
+}
+
+function getDistrictId(state,district){
+    return new Promise((resolve)=>{
+        connection.query("SELECT id from districts WHERE state=? AND district=?",[state,district],function(error,results,fields){
+            if(error){
+                throw error;
+            }
+            resolve(results);
+        });
+    });
+}
+
 function connect(){
     connection.connect();
 }
@@ -47,6 +70,8 @@ function disconnect(){
 exports.db={
     getUsers,
     updateUserNotified,
+    insertDistrict,
+    getDistrictId,
     connect,
     disconnect
 };

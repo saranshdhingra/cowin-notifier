@@ -98,8 +98,8 @@ function getData(districtId,date){
         'user-agent':'Mozilla/5.0 (X11; CrOS x86_64 13729.84.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.130 Safari/537.36'
     };
     return new Promise((resolve,reject)=>{
-        resolve(getStaticData());
-        return;
+        // resolve(getStaticData());
+        // return;
         let url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`;
         fetch(url,{headers})
         .then(response => response.json())

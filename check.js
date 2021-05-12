@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 const {db} = require('./db');
 const {mailer} = require('./mail');
 
-moment.tz.setDefault('UTC');
+moment.tz.setDefault('Asia/Kolkata');
 
 const pollTimeout = 20; // repeat the process every X seconds
 

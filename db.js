@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const moment = require('moment-timezone');
 require('dotenv').config();
 
-moment.tz.setDefault('UTC');
+moment.tz.setDefault('Asia/Kolkata');
 
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,

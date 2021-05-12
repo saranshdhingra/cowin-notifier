@@ -15,7 +15,7 @@ data.states.forEach((state)=>{
 async function start(){
     console.log(await getDistricts(0));
     console.log('found '+districts.length+' districts');
-    await insertDistrict(0);
+    insertDistrict(0);
 }
 
 start();
@@ -25,8 +25,9 @@ async function insertDistrict(counter){
     console.log(`inserting district id:${row.id} state:${row.state} district:${row.district}`);
     await db.insertDistrict(row);
     if(counter<districts.length-1){
-        insertDistrict(counter+1);
+        return insertDistrict(counter+1);
     }
+    return;
 }
 
 async function getDistricts(counter){
@@ -44,8 +45,7 @@ async function getDistricts(counter){
         .then(response => response.json())
         .then(async (response)=>{
             response.districts.forEach((district)=>{
-                if(district.district_id!==294 && district.district_id!==265)
-                    districts.push({state:stateIds[counter].name,district:district.district_name,id:district.district_id});
+                districts.push({state:stateIds[counter].name,district:district.district_name,id:district.district_id});
             });
             
             if(counter<stateIds.length-1){

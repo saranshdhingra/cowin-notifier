@@ -23,7 +23,7 @@ async function start(){
     let users = await getUsers();
 
     checkForUsers(users).then(()=>{
-        console.log('checked for all users now, polling...');
+        console.log(`${moment()} checked for all users now, polling...`);
         setTimeout(()=>{
             start();
         },pollTimeout * 1000);
@@ -68,7 +68,7 @@ async function checkForDate(user,date){
         centers.forEach((center)=>{
             center.sessions.forEach((session)=>{
                 if(isSessionValid(session,user)){
-                    let displayStr=`|--Center: ${center.name}\n|--Address: ${center.address}\n|--Available:${session.available_capacity}\n|--ID:${session.session_id}\n|--PIN:${center.pincode}\n|--Date: ${session.date}`;
+                    let displayStr=`|--Center: ${center.name}\n|--Address: ${center.address}\n|--Vaccine:${session.vaccine}\n|--Available:${session.available_capacity}\n|--ID:${session.session_id}\n|--PIN:${center.pincode}\n|--Date: ${session.date}`;
                     foundSessions.push(displayStr);
                 }
             });
@@ -109,7 +109,7 @@ function getData(districtId,date){
 
 function isSessionValid(session,user){
     return (
-        session.vaccine.toLowerCase() === user.vaccine_pref && 
+        (user.vaccine_pref===null || session.vaccine.toLowerCase() === user.vaccine_pref) && 
         session.min_age_limit <= user.min_age && 
         session.available_capacity > 0
     );

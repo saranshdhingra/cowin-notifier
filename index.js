@@ -1,6 +1,6 @@
 const express = require('express');
 const { db } = require('./db');
-const {secretsManager} = require('secrets');
+const {secretsManager} = require('./secrets');
 const app = express();
 
 const port = process.env.COWIN_API_PORT;

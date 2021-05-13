@@ -3,6 +3,9 @@ const fs = require('fs');
 const moment = require('moment-timezone');
 const {db} = require('./db');
 const {mailer} = require('./mail');
+const {secretsManager} = require('./secrets');
+
+secretsManager.accessSecrets();
 
 moment.tz.setDefault('Asia/Kolkata');
 

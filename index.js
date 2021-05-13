@@ -1,7 +1,15 @@
 const express = require('express');
 const { db } = require('./db');
+const {secretsManager} = require('secrets');
 const app = express();
-const port = COWIN_API_PORT;
+
+const port = process.env.COWIN_API_PORT;
+
+secretsManager.accessSecrets().then(()=>{
+    app.listen(port,()=>{
+        console.log(`listening at http://localhost:${port}`);
+    });
+});
 
 app.get('/', (req,res)=>{
     res.send('Hello World!');
@@ -15,10 +23,6 @@ app.get('/users/add',async (req,res)=>{
 
     db.insertUser(data.email,districtId,vaccine,data.age,isVerified);
     res.send('Hello');
-});
-
-app.listen(port,()=>{
-    console.log(`listening at http://localhost:${port}`);
 });
 
 async function getDistrictId(state,district){

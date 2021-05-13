@@ -1,22 +1,21 @@
 const mysql = require('mysql');
 const moment = require('moment-timezone');
-require('dotenv').config();
 
 moment.tz.setDefault('Asia/Kolkata');
 
 const connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
+    host: process.env.COWIN_DB_HOST,
+    port: process.env.COWIN_DB_PORT,
+    user: process.env.COWIN_DB_USERNAME,
+    password: process.env.COWIN_DB_PASSWORD,
+    database: process.env.COWIN_DB_DATABASE
 }),
     timeFormat='YYYY-MM-DD HH:mm:ss';
 
 
 async function getUsers() {
     return new Promise((resolve) => {
-        const minTime = moment().subtract(process.env.MIN_NOTIFY_DELAY_SECS,'seconds').format(timeFormat);
+        const minTime = moment().subtract(process.env.COWIN_MIN_NOTIFY_DELAY_SECS,'seconds').format(timeFormat);
         connection.query("SELECT * FROM users where (last_notified is null or last_notified < ?)",[minTime], function (error, results, fields) {
             if (error) throw error;
             resolve(results);

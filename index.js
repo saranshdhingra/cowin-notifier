@@ -1,7 +1,7 @@
 const express = require('express');
 const { db } = require('./db');
 const app = express();
-const port = 3000;
+const port = COWIN_API_PORT;
 
 app.get('/', (req,res)=>{
     res.send('Hello World!');

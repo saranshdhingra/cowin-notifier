@@ -5,7 +5,10 @@ const {db} = require('./db');
 const {mailer} = require('./mail');
 const {secretsManager} = require('./secrets');
 
-secretsManager.accessSecrets();
+secretsManager.accessSecrets().then(()=>{
+    db.connect();
+    start();
+});
 
 moment.tz.setDefault('Asia/Kolkata');
 
@@ -121,7 +124,7 @@ function isSessionValid(session,user){
 function shouldNotify(user){
     return (
         user.last_notified===null || 
-        moment().diff(moment(user.last_notified),'seconds') > process.env.MIN_NOTIFY_DELAY_SECS
+        moment().diff(moment(user.last_notified),'seconds') > process.env.COWIN_MIN_NOTIFY_DELAY_SECS
     );
 }
 
@@ -132,6 +135,3 @@ function shouldNotify(user){
 function getStaticData(){
     return JSON.parse(fs.readFileSync('sample.json','utf-8'));
 }
-
-db.connect();
-start();

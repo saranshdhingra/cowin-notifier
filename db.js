@@ -10,13 +10,14 @@ const connection = mysql.createConnection({
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE
-});
+}),
+    timeFormat='YYYY-MM-DD HH:mm:ss';
 
 
 async function getUsers() {
     return new Promise((resolve) => {
-
-        connection.query("SELECT * FROM users where (last_notified is null or last_notified < DATE_SUB(NOW(), INTERVAL '1' HOUR))", function (error, results, fields) {
+        const minTime = moment().subtract(process.env.MIN_NOTIFY_DELAY_SECS,'seconds').format(timeFormat);
+        connection.query("SELECT * FROM users where (last_notified is null or last_notified < ?)",[minTime], function (error, results, fields) {
             if (error) throw error;
             resolve(results);
         });
@@ -25,7 +26,7 @@ async function getUsers() {
 
 async function updateUserNotified(user){
     return new Promise((resolve)=>{
-        const time=moment().format('YYYY-MM-DD hh:mm:ss');
+        const time=moment().format(timeFormat);
         console.log('updating last notified for user'+user.id+" to"+time);
         connection.query("UPDATE users SET last_notified=? WHERE users.id=?",[time,user.id],function(error,results,fields){
             if(error){
@@ -38,7 +39,7 @@ async function updateUserNotified(user){
 
 function insertDistrict(row){
     return new Promise((resolve)=>{
-        const time=moment().format('YYYY-MM-DD hh:mm:ss');
+        const time=moment().format(timeFormat);
         connection.query("INSERT INTO districts VALUES(?,?,?,?,?)",[row.id,row.state,row.district,time,time],function(error,results,fields){
             if(error){
                 throw error;
@@ -72,7 +73,7 @@ function isUserVerified(email){
 
 function insertUser(email,districtId,vaccine,minAge,isVerified){
     return new Promise((resolve)=>{
-        const time=moment().format('YYYY-MM-DD hh:mm:ss'),
+        const time=moment().format(timeFormat),
             verifiedAt = isVerified ? time : null;
 
         console.log('Inserting user');

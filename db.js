@@ -3,14 +3,8 @@ const moment = require('moment-timezone');
 
 moment.tz.setDefault('Asia/Kolkata');
 
-const connection = mysql.createConnection({
-    host: process.env.COWIN_DB_HOST,
-    port: process.env.COWIN_DB_PORT,
-    user: process.env.COWIN_DB_USERNAME,
-    password: process.env.COWIN_DB_PASSWORD,
-    database: process.env.COWIN_DB_DATABASE
-}),
-    timeFormat='YYYY-MM-DD HH:mm:ss';
+let connection;
+const timeFormat='YYYY-MM-DD HH:mm:ss';
 
 
 async function getUsers() {
@@ -86,6 +80,13 @@ function insertUser(email,districtId,vaccine,minAge,isVerified){
 }
 
 function connect(){
+    connection = mysql.createConnection({
+        host: process.env.COWIN_DB_HOST,
+        port: process.env.COWIN_DB_PORT,
+        user: process.env.COWIN_DB_USERNAME,
+        password: process.env.COWIN_DB_PASSWORD,
+        database: process.env.COWIN_DB_DATABASE
+    });
     connection.connect();
 }
 

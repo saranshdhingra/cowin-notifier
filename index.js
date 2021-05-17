@@ -38,6 +38,7 @@ app.post('/register-email',(req,res)=>{
 app.get('/dashboard', async (req,res)=>{
     const user=req.query.user;
     let entries = await db.getUserEntries(user);
+    const states= utils.getStateDistrictPair();
     entries.map((entry)=>{
         let row=utils.getDistrictById(entry.district_id);
         entry.state=row.state;
@@ -47,7 +48,8 @@ app.get('/dashboard', async (req,res)=>{
     });
     res.render('dashboard',{
         user,
-        entries
+        entries,
+        states
     });
 });
 
@@ -55,7 +57,7 @@ app.get('/users/add',async (req,res)=>{
     const data = req.query,
         districtId=await getDistrictId(data.state,data.district),
         isVerified=await isUserVerified(data.email),
-        vaccine=data.vaccine===undefined ? null : data.vaccine;
+        vaccine=data.vaccine=="-1" ? null : data.vaccine;
 
     db.insertUser(data.email,districtId,vaccine,data.age,isVerified);
     res.send('Hello');

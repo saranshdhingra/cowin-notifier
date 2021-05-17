@@ -17,7 +17,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            Your currently monitored districts:
+                            Your currently monitored districts: <button class="btn btn-primary" data-bs-toggle="modal" href="#addRequestModal" role="button">Add Request</button>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -49,8 +49,62 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="addRequestModal" aria-hidden="true" aria-labelledby="addRequestModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Add Request</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="form" id="addrequestForm">
+                          <input type="hidden" name="email" value="<%= user %>" />
+                        <div class="form-group">
+                            <label for="stateControl" class="form-label">State</label>
+                            <select class="form-select" id="stateControl" name="state">
+                                <option selected value="-1">Select State</option>
+                                <% Object.keys(states).forEach((state)=>{ %>
+                                    <option><%= state %></option>
+                                <% }) %>
+                              </select>
+                              <div id="stateError" class="text-danger">Please select a valid state.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="districtControl" class="form-label">District</label>
+                            <select class="form-select" id="districtControl" name="district">
+                                <option value="-1">Select District</option>
+                                <% for(let state in states){ %>
+                                    <% for(let district in states[state]){ %>
+                                        <option data-state="<%= state %>" class="district d-none"><%= states[state][district] %></option>
+                                    <% }%>
+                                <% } %>
+                              </select>
+                              <div id="districtError" class="text-danger">Please select a valid district.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vaccineControl" class="form-label">Vaccine Preference:</label>
+                            <select class="form-select" id="vaccineControl" name="vaccine">
+                                <option selected value="-1">None</option>
+                                <option>Covaxin</option>
+                                <option>Covishield</option>
+                              </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ageControl" class="form-label">Age Group:</label>
+                            <select class="form-select" id="ageControl" name="age">
+                                <option selected>18</option>
+                                <option>45</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary">Start Monitoring</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
         <!-- JavaScript Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-        <!-- <script src="js/app.js"></script> -->
+        <script src="js/dashboard.js"></script>
     </body>
 </html>

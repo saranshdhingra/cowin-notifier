@@ -17,6 +17,24 @@ async function getUsers() {
     });
 }
 
+async function getUserEntries(email){
+    return new Promise((resolve) => {
+        connection.query("SELECT * FROM users where email=?",[email], function (error, results, fields) {
+            if (error) throw error;
+            resolve(results);
+        });
+    });
+}
+
+async function getDistricts(){
+    return new Promise((resolve) => {
+        connection.query("SELECT * FROM districts", function (error, results, fields) {
+            if (error) throw error;
+            resolve(results);
+        });
+    });
+}
+
 async function updateUserNotified(user){
     return new Promise((resolve)=>{
         const time=moment().format(timeFormat);
@@ -79,15 +97,17 @@ function insertUser(email,districtId,vaccine,minAge,isVerified){
     });
 }
 
-function connect(){
-    connection = mysql.createConnection({
-        host: process.env.COWIN_DB_HOST,
-        port: process.env.COWIN_DB_PORT,
-        user: process.env.COWIN_DB_USERNAME,
-        password: process.env.COWIN_DB_PASSWORD,
-        database: process.env.COWIN_DB_DATABASE
+async function connect(){
+    return new Promise((resolve)=>{
+        connection = mysql.createConnection({
+            host: process.env.COWIN_DB_HOST,
+            port: process.env.COWIN_DB_PORT,
+            user: process.env.COWIN_DB_USERNAME,
+            password: process.env.COWIN_DB_PASSWORD,
+            database: process.env.COWIN_DB_DATABASE
+        });
+        connection.connect(resolve);
     });
-    connection.connect();
 }
 
 function disconnect(){
@@ -96,6 +116,8 @@ function disconnect(){
 
 exports.db={
     getUsers,
+    getUserEntries,
+    getDistricts,
     updateUserNotified,
     insertDistrict,
     getDistrictId,

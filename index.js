@@ -56,17 +56,16 @@ app.get('/dashboard', async (req,res)=>{
 app.get('/users/add',async (req,res)=>{
     const data = req.query,
         districtId=await getDistrictId(data.state,data.district),
-        isVerified=await isUserVerified(data.email),
         vaccine=data.vaccine=="-1" ? null : data.vaccine;
 
-    db.insertUser(data.email,districtId,vaccine,data.age,isVerified);
+    db.insertUser(data.email,districtId,vaccine,data.age);
     res.send('Hello');
 });
 
 app.get('/requests/remove',async (req,res)=>{
     const reqId=req.query.request_id,
         email=req.query.email;
-        
+
     await db.removeRequest(reqId);
     res.redirect(`/dashboard?user=${email}`);
 });

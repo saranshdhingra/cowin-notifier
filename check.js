@@ -5,8 +5,8 @@ const {db} = require('./db');
 const {mailer} = require('./mail');
 const {secretsManager} = require('./secrets');
 
-secretsManager.accessSecrets().then(()=>{
-    db.connect();
+secretsManager.accessSecrets().then(async ()=>{
+    await db.connect();
     start();
 });
 

@@ -71,24 +71,12 @@ function getDistrictId(state,district){
     });
 }
 
-function isUserVerified(email){
+function insertUser(email,districtId,vaccine,minAge){
     return new Promise((resolve)=>{
-        connection.query("SELECT count(*) as count FROM users WHERE email=? AND verified_at IS NOT NULL",[email],function(error,results,fields){
-            if(error){
-                throw error;
-            }
-            resolve(results);
-        });
-    });
-}
-
-function insertUser(email,districtId,vaccine,minAge,isVerified){
-    return new Promise((resolve)=>{
-        const time=moment().format(timeFormat),
-            verifiedAt = isVerified ? time : null;
+        const time=moment().format(timeFormat);
 
         console.log('Inserting user');
-        connection.query("INSERT INTO users(email,district_id,vaccine_pref,min_age,verified_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?)",[email,districtId,vaccine,minAge,verifiedAt,time,time],function(error,results,fields){
+        connection.query("INSERT INTO users(email,district_id,vaccine_pref,min_age,created_at,updated_at) VALUES(?,?,?,?,?,?)",[email,districtId,vaccine,minAge,time,time],function(error,results,fields){
             if(error){
                 throw error;
             }
@@ -130,7 +118,6 @@ exports.db={
     updateUserNotified,
     insertDistrict,
     getDistrictId,
-    isUserVerified,
     insertUser,
     removeRequest,
     connect,

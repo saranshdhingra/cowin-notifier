@@ -28,6 +28,7 @@
                                         <td>Min Age</td>
                                         <td>Status</td>
                                         <td>Last Checked</td>
+                                        <td>Actions</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -40,6 +41,7 @@
                                             <td><%= entry.min_age %></td>
                                             <td><%= entry.status %></td>
                                             <td><%= entry.last_checked %></td>
+                                            <td><a class="btn btn-danger" href="/requests/remove?request_id=<%= entry.id %>&email=<%= user %>">Remove</a></td>
                                         </tr>
                                     <% }) %>
                                 </tbody>

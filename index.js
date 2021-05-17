@@ -63,6 +63,14 @@ app.get('/users/add',async (req,res)=>{
     res.send('Hello');
 });
 
+app.get('/requests/remove',async (req,res)=>{
+    const reqId=req.query.request_id,
+        email=req.query.email;
+        
+    await db.removeRequest(reqId);
+    res.redirect(`/dashboard?user=${email}`);
+});
+
 async function getDistrictId(state,district){
     const result = await db.getDistrictId(state,district);
     if(!result.length)

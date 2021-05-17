@@ -97,6 +97,15 @@ function insertUser(email,districtId,vaccine,minAge,isVerified){
     });
 }
 
+function removeRequest(reqId){
+    return new Promise((resolve)=>{
+        connection.query("DELETE FROM users WHERE id=?",[reqId],function(err,results,fields){
+            if(err) throw err;
+            resolve();
+        })
+    })
+}
+
 async function connect(){
     return new Promise((resolve)=>{
         connection = mysql.createConnection({
@@ -123,6 +132,7 @@ exports.db={
     getDistrictId,
     isUserVerified,
     insertUser,
+    removeRequest,
     connect,
     disconnect
 };

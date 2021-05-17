@@ -1,7 +1,11 @@
 const express = require('express');
+const path = require('path');
 const { db } = require('./db');
 const {secretsManager} = require('./secrets');
 const app = express();
+
+// making sure we serve static files
+app.use(express.static('public'));
 
 const port = process.env.COWIN_API_PORT;
 
@@ -12,7 +16,16 @@ secretsManager.accessSecrets().then(()=>{
 });
 
 app.get('/', (req,res)=>{
-    res.send('Hello World!');
+    res.sendFile(path.join(__dirname, '/index.html'));
+});
+
+app.post('/register-email',(req,res)=>{
+    // this should send a verification mail first, but we are simulating the login instead
+    res.send("OTP has been sent to the email!");
+});
+
+app.get('/dashboard', (req,res)=>{
+    res.sendFile(path.join(__dirname, '/dashboard.html'));
 });
 
 app.get('/users/add',async (req,res)=>{

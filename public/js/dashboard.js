@@ -43,3 +43,19 @@ document.getElementById("stateControl").addEventListener("change",function(){
         }
     });
 });
+
+document.querySelectorAll(".removeRequestBtn").forEach((el)=>{
+    el.addEventListener("click",function(e){
+        e.preventDefault();
+        const href=this.getAttribute("href"),
+            state=this.getAttribute("data-state"),
+            district=this.getAttribute("data-district"),
+            vaccine=this.getAttribute("data-vaccine"),
+            age=this.getAttribute("data-age"),
+            ques=`Are you sure you want to remove this record:\nState:${state}\nDistrict:${district}\nVaccine:${vaccine}\nMin Age:${age}`,
+            response = confirm(ques);
+        if(response===true){
+            window.location=href;
+        }
+    })
+})

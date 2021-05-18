@@ -41,7 +41,18 @@
                                             <td><%= entry.min_age %></td>
                                             <td><%= entry.status %></td>
                                             <td><%= entry.last_checked %></td>
-                                            <td><a class="btn btn-danger" href="/requests/remove?request_id=<%= entry.id %>&email=<%= user %>"><i class="fas fa-trash-alt me-2"></i>Remove</a></td>
+                                            <td>
+                                                <a 
+                                                    class="btn btn-danger removeRequestBtn" 
+                                                    href="/requests/remove?request_id=<%= entry.id %>&email=<%= user %>"
+                                                    data-state="<%= entry.state %>"
+                                                    data-district="<%= entry.district %>"
+                                                    data-vaccine="<%= entry.vaccine %>"
+                                                    data-age="<%= entry.min_age %>"
+                                                >
+                                                    <i class="fas fa-trash-alt me-2"></i>Remove
+                                                </a>
+                                            </td>
                                         </tr>
                                     <% }) %>
                                 </tbody>

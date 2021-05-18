@@ -48,6 +48,18 @@ async function updateUserNotified(user){
     });
 }
 
+function updateUserChecked(ids){
+    return new Promise((resolve)=>{
+        const time=moment().format(timeFormat);
+        connection.query("UPDATE users SET last_checked=? WHERE users.id IN (?)",[time,ids],function(error,results,fields){
+            if(error){
+                throw error;
+            }
+            resolve();
+        });
+    });
+}
+
 function insertDistrict(row){
     return new Promise((resolve)=>{
         const time=moment().format(timeFormat);
@@ -116,6 +128,7 @@ exports.db={
     getUserEntries,
     getDistricts,
     updateUserNotified,
+    updateUserChecked,
     insertDistrict,
     getDistrictId,
     insertUser,

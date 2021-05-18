@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
+const moment = require('moment-timezone');
 const { db } = require('./db');
 const {secretsManager} = require('./secrets');
 const {utils} = require('./utils');
 const app = express();
 const port = process.env.COWIN_API_PORT;
+
+moment.tz.setDefault('Asia/Kolkata');
 
 // making sure we serve static files
 app.use(express.static('public'));
@@ -44,7 +47,7 @@ app.get('/dashboard', async (req,res)=>{
         entry.state=row.state;
         entry.district=row.district;
         entry.status='Monitoring';
-        entry.last_checked=row.updated_at;
+        entry.last_checked= entry.last_checked===null ? 'Never' : moment(row.last_checked).fromNow();
         entry.vaccine = entry.vaccine_pref===null ? 'No Preference' : (entry.vaccine_pref.charAt(0).toUpperCase() + entry.vaccine_pref.slice(1));
     });
     res.render('dashboard',{

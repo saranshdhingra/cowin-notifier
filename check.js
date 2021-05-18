@@ -28,8 +28,11 @@ async function getUsers(){
 async function start(){
     let users = await getUsers();
 
-    checkForUsers(users).then(()=>{
-        console.log(`${moment()} checked for all users now, polling...`);
+    checkForUsers(users).then(async ()=>{
+        console.log(`${moment()} checked for all users`);
+        await db.updateUserChecked(users.map((user)=>user.id));
+        console.log(`Updated the last checked time for ${users.length} users`);
+        console.log(`now, polling for ${pollTimeout} secs...`);
         setTimeout(()=>{
             start();
         },pollTimeout * 1000);

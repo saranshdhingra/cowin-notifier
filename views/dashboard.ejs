@@ -32,29 +32,42 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% entries.forEach(function(entry,index){ %>
+                                    <% if(entries.length){ %>
+                                        <% entries.forEach(function(entry,index){ %>
+                                            <tr>
+                                                <td><%= index+1 %></td>
+                                                <td><%= entry.state %></td>
+                                                <td><%= entry.district %></td>
+                                                <td><%= entry.vaccine %></td>
+                                                <td><%= entry.min_age %></td>
+                                                <td><%= entry.status %></td>
+                                                <td><%= entry.last_checked %></td>
+                                                <td>
+                                                    <a 
+                                                        class="btn btn-danger removeRequestBtn" 
+                                                        href="/requests/remove?request_id=<%= entry.id %>&email=<%= user %>"
+                                                        data-state="<%= entry.state %>"
+                                                        data-district="<%= entry.district %>"
+                                                        data-vaccine="<%= entry.vaccine %>"
+                                                        data-age="<%= entry.min_age %>"
+                                                    >
+                                                        <i class="fas fa-trash-alt me-2"></i>Remove
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    <% } else{ %>
                                         <tr>
-                                            <td><%= index+1 %></td>
-                                            <td><%= entry.state %></td>
-                                            <td><%= entry.district %></td>
-                                            <td><%= entry.vaccine %></td>
-                                            <td><%= entry.min_age %></td>
-                                            <td><%= entry.status %></td>
-                                            <td><%= entry.last_checked %></td>
-                                            <td>
-                                                <a 
-                                                    class="btn btn-danger removeRequestBtn" 
-                                                    href="/requests/remove?request_id=<%= entry.id %>&email=<%= user %>"
-                                                    data-state="<%= entry.state %>"
-                                                    data-district="<%= entry.district %>"
-                                                    data-vaccine="<%= entry.vaccine %>"
-                                                    data-age="<%= entry.min_age %>"
-                                                >
-                                                    <i class="fas fa-trash-alt me-2"></i>Remove
-                                                </a>
-                                            </td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
                                         </tr>
-                                    <% }) %>
+                                    <% } %>
                                 </tbody>
                             </table>
                         </div>

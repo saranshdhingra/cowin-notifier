@@ -43,8 +43,9 @@ app.get('/dashboard', async (req,res)=>{
         let row=utils.getDistrictById(entry.district_id);
         entry.state=row.state;
         entry.district=row.district;
-        entry.status='monitoring';
+        entry.status='Monitoring';
         entry.last_checked=row.updated_at;
+        entry.vaccine = entry.vaccine_pref===null ? 'No Preference' : (entry.vaccine_pref.charAt(0).toUpperCase() + entry.vaccine_pref.slice(1));
     });
     res.render('dashboard',{
         user,

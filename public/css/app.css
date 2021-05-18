@@ -13,7 +13,9 @@ body{
 #email{
     max-width:300px;
 }
-
 #stateError, #districtError{
     display:none;
 }
+/* .btn>[data-icon]{
+    margin
+} */

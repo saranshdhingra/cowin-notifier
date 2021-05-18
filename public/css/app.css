@@ -1,6 +1,19 @@
 body{
-    background: rgb(255,255,255);
-    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(0,212,255,1) 100%);
+    background: url('/images/vaccine-bg.jpg') no-repeat;
+    background-size:cover;
+}
+body:after{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    filter: blur(4px);
+    opacity: 0.9;
+    background: rgba(0,212,255,1);
 }
 .rootRow{
     min-height: 100vh;

@@ -88,44 +88,52 @@
                     <div class="modal-body">
                       <form class="form" id="addrequestForm">
                           <input type="hidden" name="email" value="<%= user %>" />
-                        <div class="form-group">
-                            <label for="stateControl" class="form-label">State</label>
-                            <select class="form-select" id="stateControl" name="state">
-                                <option selected value="-1">Select State</option>
-                                <% Object.keys(states).forEach((state)=>{ %>
-                                    <option><%= state %></option>
-                                <% }) %>
-                              </select>
-                              <div id="stateError" class="text-danger">Please select a valid state.</div>
+                        <div class="form-group row mb-3 text-start">
+                            <div class="col-6">
+                                <label for="stateControl" class="form-label">State</label>
+                                <select class="form-select" id="stateControl" name="state">
+                                    <option selected value="-1">Select State</option>
+                                    <% Object.keys(states).forEach((state)=>{ %>
+                                        <option><%= state %></option>
+                                    <% }) %>
+                                  </select>
+                                  <div id="stateError" class="text-danger">Please select a valid state.</div>
+                            </div>
+                            <div class="col-6">
+                                <label for="districtControl" class="form-label">District</label>
+                                <select class="form-select" id="districtControl" name="district">
+                                    <option value="-1">Select District</option>
+                                    <% for(let state in states){ %>
+                                        <% for(let district in states[state]){ %>
+                                            <option data-state="<%= state %>" class="district d-none"><%= states[state][district] %></option>
+                                        <% }%>
+                                    <% } %>
+                                  </select>
+                                  <div id="districtError" class="text-danger">Please select a valid district.</div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="districtControl" class="form-label">District</label>
-                            <select class="form-select" id="districtControl" name="district">
-                                <option value="-1">Select District</option>
-                                <% for(let state in states){ %>
-                                    <% for(let district in states[state]){ %>
-                                        <option data-state="<%= state %>" class="district d-none"><%= states[state][district] %></option>
-                                    <% }%>
-                                <% } %>
-                              </select>
-                              <div id="districtError" class="text-danger">Please select a valid district.</div>
+                        <div class="form-group row mb-3 text-start">
+                            <div class="col-6">
+                                <label for="vaccineControl" class="form-label">Vaccine Preference:</label>
+                                <select class="form-select" id="vaccineControl" name="vaccine">
+                                    <option selected value="-1">None</option>
+                                    <option>Covaxin</option>
+                                    <option>Covishield</option>
+                                  </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="ageControl" class="form-label">Age Group:</label>
+                                <select class="form-select" id="ageControl" name="age">
+                                    <option selected>18</option>
+                                    <option>45</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="vaccineControl" class="form-label">Vaccine Preference:</label>
-                            <select class="form-select" id="vaccineControl" name="vaccine">
-                                <option selected value="-1">None</option>
-                                <option>Covaxin</option>
-                                <option>Covishield</option>
-                              </select>
+                        <div class="form-group row mb-3">
+                            <div class="col-12">
+                                <button class="d-block w-100 btn btn-primary">Start Monitoring</button>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="ageControl" class="form-label">Age Group:</label>
-                            <select class="form-select" id="ageControl" name="age">
-                                <option selected>18</option>
-                                <option>45</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary">Start Monitoring</button>
                       </form>
                     </div>
                   </div>

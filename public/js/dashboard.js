@@ -4,28 +4,37 @@ document.getElementById("addrequestForm").addEventListener("submit",function(e){
         urlString = new URLSearchParams(formData).toString(),
         formEntries = formData.entries();
 
-    let json = Object.assign(...Array.from(formEntries, ([x,y]) => ({[x]:y})));
+    let json = Object.assign(...Array.from(formEntries, ([x,y]) => ({[x]:y}))),
+        errors=false;
     
     if(json.state=="-1"){
         document.getElementById("stateError").style.display="block";
+        errors=true;
     }
     else{
         document.getElementById("stateError").style.display="none";
     }
     if(json.district=="-1"){
         document.getElementById("districtError").style.display="block";
+        errors=true;
     }
     else{
         document.getElementById("districtError").style.display="none";
     }
 
-    fetch(`/users/add?${urlString}`).
-    then(response=>{
-        new bootstrap.Modal(document.getElementById('addRequestModal'), {
-            keyboard: false
-          })
-        window.location.reload();
-    });
+    // send a request only if there were no errors
+    if(!errors){
+        fetch(`/users/add?${urlString}`).
+        then(response=>{
+            //hide the modal
+            new bootstrap.Modal(document.getElementById('addRequestModal'), {
+                keyboard: false
+            });
+
+            //reload to see the new data
+            window.location.reload();
+        });
+    }
 });
 
 document.getElementById("stateControl").addEventListener("change",function(){

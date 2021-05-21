@@ -38,6 +38,11 @@ app.post('/register-email',(req,res)=>{
     res.send("OTP has been sent to the email!");
 });
 
+app.get('/logout',(req,res)=>{
+    // dispose any sessions and redirect to home page
+    res.redirect('/');
+});
+
 app.get('/dashboard', async (req,res)=>{
     const user=req.query.user;
     let entries = await db.getUserEntries(user);

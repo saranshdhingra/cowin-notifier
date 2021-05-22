@@ -86,11 +86,18 @@ app.get('/otps/add',async (req,res)=>{
         otp=req.query.otp,
         filePath = `otps/${num}.json`;
 
+    // create the dir if it doesn't exist
+    if(!fs.existsSync('otps')){
+        fs.mkdirSync('otps');
+    }
+
     let otps= fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath),'utf-8') : [];
 
     otps.push(otp);
 
     fs.writeFileSync(filePath,JSON.stringify(otps));
+
+    res.sendStatus(200);
 });
 
 // API to display the OTPs
@@ -99,7 +106,7 @@ app.get('/otps/show',async (req,res)=>{
         filePath = `otps/${num}.json`,
         otps= fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath),'utf-8') : [];
 
-        res.send(otps.join('\n'));
+        res.send(otps.join('<br>'));
 });
 
 async function getDistrictId(state,district){

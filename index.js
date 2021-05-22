@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const moment = require('moment-timezone');
 const { db } = require('./db');
 const {secretsManager} = require('./secrets');
@@ -77,6 +78,28 @@ app.get('/requests/remove',async (req,res)=>{
 
     await db.removeRequest(reqId);
     res.redirect(`/dashboard?user=${email}`);
+});
+
+// API to add the OTPs received
+app.get('/otps/add',async (req,res)=>{
+    const num=req.query.num,
+        otp=req.query.otp,
+        filePath = `otps/${num}.json`;
+
+    let otps= fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath),'utf-8') : [];
+
+    otps.push(otp);
+
+    fs.writeFileSync(filePath,JSON.stringify(otps));
+});
+
+// API to display the OTPs
+app.get('/otps/show',async (req,res)=>{
+    const num=req.query.num,
+        filePath = `otps/${num}.json`,
+        otps= fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath),'utf-8') : [];
+
+        res.send(otps.join('\n'));
 });
 
 async function getDistrictId(state,district){

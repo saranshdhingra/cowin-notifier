@@ -19,7 +19,13 @@ app.set('view engine', 'ejs');
 
 secretsManager.accessSecrets().then(async ()=>{
     // connect to db before anything
-    await db.connect();
+    try{
+        await db.connect();
+    }
+    catch(err){
+        console.log("error while connecting");
+        console.log(err);
+    }
 
     // let's fetch the districts as it's a one time operation
     await utils.populateDistricts();

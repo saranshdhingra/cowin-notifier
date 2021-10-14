@@ -77,14 +77,20 @@ async function checkForDate(user,date){
         centers.forEach((center)=>{
             center.sessions.forEach((session)=>{
                 if(isSessionValid(session,user)){
-                    let displayStr=`|--Center: ${center.name}\n|--Address: ${center.address}\n|--Vaccine:${session.vaccine}\n|--Available:${session.available_capacity}\n|--ID:${session.session_id}\n|--PIN:${center.pincode}\n|--Date: ${session.date}`;
-                    foundSessions.push(displayStr);
+                    foundSessions.push({
+                        center: center.name,
+                        address: center.address,
+                        vaccine: session.vaccine,
+                        available: session.available_capacity,
+                        id: session.session_id,
+                        pincode: center.pincode,
+                        date: session.date
+                    });
                 }
             });
         });
 
         if(foundSessions.length && shouldNotify(user)){
-            console.log(foundSessions.join('\n'));
             await mailer.sendMail(user.email,foundSessions);
             await db.updateUserNotified(user);
         }
